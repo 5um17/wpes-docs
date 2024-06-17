@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "https://wpes.secretsofgeeks.com/static/css/main.0c88d96a.css",
+    "main.js": "https://wpes.secretsofgeeks.com/static/js/main.09da5be8.js",
+    "static/media/setting-edit-screen.jpg": "https://wpes.secretsofgeeks.com/static/media/setting-edit-screen.1513b32b4843697205fc.jpg",
+    "static/media/wpes-searchform-php.jpg": "https://wpes.secretsofgeeks.com/static/media/wpes-searchform-php.7b5c9d8bd89a9dc59f69.jpg",
+    "static/media/CW.jpg": "https://wpes.secretsofgeeks.com/static/media/CW.0d223b61e78f874d9fb0.jpg",
+    "static/media/disable-wpes-global-settings.jpg": "https://wpes.secretsofgeeks.com/static/media/disable-wpes-global-settings.85a8b7dc071dd14220fb.jpg",
+    "static/media/configure-search-setting.jpg": "https://wpes.secretsofgeeks.com/static/media/configure-search-setting.8ead9efd5722d596d545.jpg",
+    "index.html": "https://wpes.secretsofgeeks.com/index.html",
+    "static/media/icon-404.svg": "https://wpes.secretsofgeeks.com/static/media/icon-404.14bc51726cb0dd4b1c966f9e1420b91a.svg",
+    "static/media/icon-copy.svg": "https://wpes.secretsofgeeks.com/static/media/icon-copy.a028aa399e3a34b55919f054ba636812.svg"
+  },
+  "entrypoints": [
+    "static/css/main.0c88d96a.css",
+    "static/js/main.09da5be8.js"
+  ]
+}
