@@ -1,6 +1,9 @@
 import hljs from "highlight.js/lib/common";
 import { GoogleAd } from "../componenets/utils";
 import 'highlight.js/styles/github-dark.css';
+import copy from "copy-to-clipboard"
+import { useState } from 'react';
+import { ReactComponent as CopyIcon } from '../assets/icon-copy.svg'
 
 export const content = () => (
     <>
@@ -12,9 +15,9 @@ export const content = () => (
  * Select all meta keys including those start with _(underscore)
  */
 function wpes_meta_keys_query($query) {
-        global $wpdb;
-        $query = "select DISTINCT meta_key from $wpdb->postmeta ORDER BY meta_key ASC";
-        return $query;
+	global $wpdb;
+	$query = "select DISTINCT meta_key from $wpdb->postmeta ORDER BY meta_key ASC";
+	return $query;
 }
 add_filter('wpes_meta_keys_query', 'wpes_meta_keys_query');
     `}</CodeBlock>
@@ -27,11 +30,11 @@ add_filter('wpes_meta_keys_query', 'wpes_meta_keys_query');
  * Display only custom taxonomies
  */
 function wpes_tax_args($args) {
-        $args['_builtin'] = false;
-        return $args;
+	$args['_builtin'] = false;
+	return $args;
 }
 add_filter('wpes_tax_args', 'wpes_tax_args');
-        `}</CodeBlock>
+	`}</CodeBlock>
 
         <SubHeading name="wpes_post_types_args" />
         <p>Filter <code>get_post_types()</code> argument array used for listing post type in settings.</p>
@@ -40,11 +43,11 @@ add_filter('wpes_tax_args', 'wpes_tax_args');
  * List only custom post types
  */
 function wpes_post_types_args($args) {
-        $args['_builtin'] = false;
-        return $args;
+	$args['_builtin'] = false;
+	return $args;
 }
 add_filter('wpes_post_types_args', 'wpes_post_types_args');
-        `}</CodeBlock>
+	`}</CodeBlock>
 
         <SubHeading name="wpes_enabled" />
         <p>Filter to enable/disable plugin functions for any specific condition.</p>
@@ -53,10 +56,10 @@ add_filter('wpes_post_types_args', 'wpes_post_types_args');
  * Disable WPES when query string variable disable_wpes is true
  */
 function wpes_enabled($enabled) {
-        if (!empty($_GET['disable_wpes'])) {
-                return FALSE;
-        }
-        return $enabled;
+	if (!empty($_GET['disable_wpes'])) {
+		return FALSE;
+	}
+	return $enabled;
 }
 add_filter('wpes_enabled', 'wpes_enabled');`}
         </CodeBlock>
@@ -72,11 +75,11 @@ add_filter('wpes_enabled', 'wpes_enabled');`}
  * @return string where clause
  */
 function wpes_posts_search($search_where, $wp_query) {
-        $search_where .= " AND your_custom_var = 'your_custom_value'";
-        return $search_where;
+	$search_where .= " AND your_custom_var = 'your_custom_value'";
+	return $search_where;
 }
 add_filter('wpes_posts_search', 'wpes_posts_search', 10, 2);
-        `}</CodeBlock>
+	`}</CodeBlock>
 
         <SubHeading name="wpes_meta_keys" />
         <p>Filter meta keys name.</p>
@@ -85,42 +88,55 @@ add_filter('wpes_posts_search', 'wpes_posts_search', 10, 2);
  * Insert only one key that start with underscore
  */
 function wpes_meta_keys($meta_keys) {
-        $meta_keys[] = '_key_with_underscore';
-        return $meta_keys;
+	$meta_keys[] = '_key_with_underscore';
+	return $meta_keys;
 }
 add_filter('wpes_meta_keys', 'wpes_meta_keys');
-        `}</CodeBlock>
+	`}</CodeBlock>
 
         <SubHeading name="wpes_tax" />
         <p>Filter Taxonomies array return by <code>get_taxonomies()</code></p>
         <CodeBlock lang='php'>{`
 /**
- * Insert specific taxonomy in the result return by get_taxonomies
+ * Insert specific taxonomy in the result returned by get_taxonomies
+ * 
+ * @param array $taxonomies Array of taxonomies. 
+ * @return array $taxonomies 
  */
 function wpes_tax($taxonomies) {
-        $my_tax = new stdClass();
-        $my_tax->labels->name = 'Custom Tax';
-        $taxonomies['custom_tax'] = $my_tax;
-        return $taxonomies;
+    $my_tax = (object) [
+	'labels' => (object) [
+	    'name' => 'Custom Tax'
+	]
+    ];
+    $taxonomies['custom_tax'] = $my_tax;
+
+    return $taxonomies;
 }
 add_filter('wpes_tax', 'wpes_tax');
-        `}</CodeBlock>
+	`}</CodeBlock>
 
         <SubHeading name="wpes_post_types" />
         <p>Filter post types array return by <code>get_post_types()</code></p>
         <CodeBlock lang='php'>{`
 /**
- * Insert specific post type in the result return by get_post_types
+ * Insert specific post type in the result returned by get_post_types
+ * 
+ * @param array $post_types 
+ * @return array $post_types
  */
 function wpes_post_types($post_types) {
-        $my_post_type = new stdClass();
-        $my_post_type->labels = new stdClass();
-        $my_post_type->labels->name = 'Custom Post'; // "Custom Post" is the name of post type.
-        $post_types['custom_post'] = $my_post_type; // "custom_post" is the slug of post type.
-        return $post_types;
+    $my_post_type = (object) [
+	'labels' => (object) [
+	    'name' => 'Custom Post' // "Custom Post" is the name of post type.
+	]
+    ];
+    $post_types['custom_post'] = $my_post_type; // "custom_post" is the slug of post type.
+    
+    return $post_types;
 }
-add_filter('wpes_post_types', 'wpes_post_types');
-        `}</CodeBlock>
+add_filter('wpes_post_types', 'wpes_post_types', 10, 1);
+	`}</CodeBlock>
 
         <SubHeading name="wp_es_terms_relation_type" />
         <p>Filter the term relation type OR/AND in search SQL query. This filter will override the WPES setting.
@@ -131,12 +147,12 @@ add_filter('wpes_post_types', 'wpes_post_types');
  * @return string OR or AND relation between terms in SQL query
  */
 function wp_es_terms_relation_type() {
-        if ($_GET['s'] == 'hello WP') {
-                return 'OR';
-        }
+	if ($_GET['s'] == 'hello WP') {
+		return 'OR';
+	}
 }
 add_filter('wp_es_terms_relation_type', 'wp_es_terms_relation_type');
-        `}</CodeBlock>
+	`}</CodeBlock>
 
         <SubHeading name="disable_wpes" />
         <p><code>disable_wpes</code> is a query var. You can pass this query var to your custom queries to disable WPES for specific queries.</p>
@@ -146,23 +162,39 @@ add_filter('wp_es_terms_relation_type', 'wp_es_terms_relation_type');
  * Disable WPES when my_custom_var is set to true.
  */
 add_action('parse_query', function ( $q ) {
-        if ($q->get('my_custom_var')) {
-                $q->set('disable_wpes', true);
-        }
+	if ($q->get('my_custom_var')) {
+		$q->set('disable_wpes', true);
+	}
 });	
-        `}</CodeBlock>
+	`}</CodeBlock>
     </>
 )
 
-const CodeBlock = args => (
-    <pre>
-        <code className="hljs" dangerouslySetInnerHTML={{ __html: hljs.highlight(args.children, { language: args.lang }).value }}></code>
-    </pre>
-)
+const CodeBlock = args => {
+    const [copyTxt, setCopyTxt] = useState('Copy Code')
+
+    return (
+        <pre className="position-relative">
+            <span onClick={() => copyCode(args.children, setCopyTxt)} className="copy-code">
+                <CopyIcon width={16} height={16} />
+                {` ${copyTxt}`}
+            </span>
+            <code className="hljs code-block" dangerouslySetInnerHTML={{ __html: hljs.highlight(args.children, { language: args.lang }).value }}></code>
+        </pre>
+    )
+}
 
 const SubHeading = ({ name }) => (
     <h3 id={name}>{name}</h3>
 )
+
+const copyCode = (content, setSpanTxt) => {
+    copy(content)
+    setSpanTxt('Copied')
+    setTimeout(() => {
+        setSpanTxt('Copy Code')
+    }, 2000);
+}
 
 export const jumpLinks = {
     'wpes_meta_keys_query': 'wpes_meta_keys_query',

@@ -9,8 +9,7 @@ const JumpList = ({ links, ParentElem, cssClass }) =>
 
         if (ParentElem === false) {
             attrs.className = cssClass;
-            attrs.key = link;
-            return <a {...attrs}>{title}</a>
+            return <a key={link} {...attrs}>{title}</a>
         } else {
             return <ParentElem key={link} className={cssClass}><a {...attrs}>{title}</a></ParentElem>
         }
