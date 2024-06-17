@@ -2,7 +2,7 @@ name: Build and deploy to gh-pages
 
 on:
   push:
-    branches: [ docs ]
+    branches: [ main ]
 
   workflow_dispatch:
 
